@@ -1,0 +1,11 @@
+version: '3'
+services:
+  screenshot_uploader:
+    build: .
+    image: globee/screenshot_uploader
+    ports:
+      - 6500:6500
+    env_file:
+      - .env
+    # volumes:
+    #   - ./uploads:/uploads
