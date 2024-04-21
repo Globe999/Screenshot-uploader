@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from urllib.parse import urljoin
 from waitress import serve
 from dotenv import load_dotenv
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -12,6 +13,10 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 load_dotenv()
 
 app = Flask(__name__)
+
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 app.config['UPLOAD_FOLDER'] = Path(UPLOAD_FOLDER).absolute()
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 
